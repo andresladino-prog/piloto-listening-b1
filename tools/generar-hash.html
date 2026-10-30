@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Generar hash de contraseña</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 16px; color: #1f2328; background: #f6f4f1; }
+    input, button { font: inherit; padding: 10px 12px; border-radius: 8px; border: 1px solid #cfc8bf; }
+    input { width: 100%; box-sizing: border-box; }
+    button { background: #b0172e; color: #fff; border-color: #b0172e; cursor: pointer; margin-top: 10px; }
+    code { display: block; word-break: break-all; background: #fff; border: 1px solid #e2ddd6; padding: 12px; border-radius: 8px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <h1>Generar hash de la contraseña</h1>
+  <p>Escriba la nueva contraseña general. Copie el resultado en <b>assets/js/config.js</b> → <code style="display:inline;padding:2px 6px">passwordHash</code>, y escriba la misma contraseña (sin hash) en <b>apps-script/Code.gs</b> → <code style="display:inline;padding:2px 6px">PILOT_PASSWORD</code>.</p>
+  <p>Nada de lo que escriba aquí sale de su navegador.</p>
+  <input id="pw" type="text" placeholder="Nueva contraseña" autocomplete="off">
+  <button id="go" type="button">Generar</button>
+  <code id="out">—</code>
+  <script>
+    document.getElementById('go').onclick = async () => {
+      const v = document.getElementById('pw').value;
+      if (!v) return;
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(v));
+      document.getElementById('out').textContent = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    };
+  </script>
+</body>
+</html>
